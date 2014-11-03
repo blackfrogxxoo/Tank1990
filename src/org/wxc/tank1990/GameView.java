@@ -1,7 +1,11 @@
 package org.wxc.tank1990;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
@@ -10,11 +14,32 @@ import android.view.SurfaceView;
 
 public class GameView extends SurfaceView implements Callback, Runnable{
 	//引入的元素有battlecity.png,selecttank.gif,声音用hit.wav
+	
 	MainActivity mainActivity;
-
+	Canvas canvas;// 在draw方法中实例化
+	Thread thread;
+	Paint paint;
+	int screenW, screenH;
+	int bitX, bitY;
+	SurfaceHolder surfaceHolder;
+	private Bitmap shoubing;
 	public GameView(Context context) {
 		super(context);
-		// TODO Auto-generated constructor stub
+		thread = new Thread(this);
+
+		surfaceHolder = this.getHolder();
+		surfaceHolder.addCallback(this);// 添加Callback
+
+		paint = new Paint();
+		paint.setAntiAlias(true);
+		paint.setTextSize(30);
+		paint.setColor(Color.WHITE);
+		this.setKeepScreenOn(true);
+
+		shoubing = BitmapFactory.decodeResource(getResources(),
+				R.drawable.shoubing);
+		
+
 	}
 
 	@Override
@@ -29,10 +54,23 @@ public class GameView extends SurfaceView implements Callback, Runnable{
 		return super.onKeyDown(keyCode, event);
 	}
 
-	@Override
-	public void draw(Canvas canvas) {
-		// TODO Auto-generated method stub
-		super.draw(canvas);
+	public void draw() {
+		try {
+			shoubing = Bitmap.createScaledBitmap(shoubing,screenW,screenH-screenW,true);//横向填满屏幕
+			bitX = shoubing.getWidth();
+			bitY = shoubing.getHeight();
+			System.out.println("Width:" + bitX + " Height:" + bitY);
+			canvas = surfaceHolder.lockCanvas();// 得到一个canvas实例
+			// canvas.drawColor(Color.WHITE);
+			shoubing.prepareToDraw();
+			canvas.drawBitmap(shoubing, (screenW-bitX)/2, screenH-bitY, null);
+			
+		} catch (Exception e) {
+
+		} finally {
+			if (canvas != null)
+				surfaceHolder.unlockCanvasAndPost(canvas);// 将画好的画布提交
+		}
 	}
 
 	@Override
@@ -49,8 +87,10 @@ public class GameView extends SurfaceView implements Callback, Runnable{
 
 	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
-		// TODO Auto-generated method stub
-		
+		screenW = this.getWidth();
+		screenH = this.getHeight();
+		System.out.println("Width:" + screenW + " Height:" + screenH);
+		draw();
 	}
 
 	@Override

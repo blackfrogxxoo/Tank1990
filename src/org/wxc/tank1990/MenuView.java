@@ -13,30 +13,32 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.animation.Animation;
 
-public class MenuView extends SurfaceView implements Callback, Runnable{
-	//引入的元素有battlecity.png,selecttank.gif,声音用hit.wav
+public class MenuView extends SurfaceView implements Callback, Runnable {
+	// 引入的元素有battlecity.png,selecttank.gif,声音用hit.wav
 	MainActivity mainActivity;
-	Canvas canvas;//在draw方法中实例化
+	Canvas canvas;// 在draw方法中实例化
 	Thread thread;
 	Paint paint;
-	int ScreenW,ScreenH;
-	int bitX,bitY;
+	int ScreenW, ScreenH;
+	int bitX, bitY;
 	SurfaceHolder surfaceHolder;
 	private Bitmap menuBit;
+
 	public MenuView(Context context) {
 		super(context);
 		thread = new Thread(this);
-		
+
 		surfaceHolder = this.getHolder();
-		surfaceHolder.addCallback(this);//添加Callback
-		
+		surfaceHolder.addCallback(this);// 添加Callback
+
 		paint = new Paint();
 		paint.setAntiAlias(true);
 		paint.setTextSize(30);
 		paint.setColor(Color.WHITE);
 		this.setKeepScreenOn(true);
-		
-		menuBit = BitmapFactory.decodeResource(getResources(), R.drawable.battlecity);
+
+		menuBit = BitmapFactory.decodeResource(getResources(),
+				R.drawable.battlecity);
 		bitX = menuBit.getWidth();
 		bitY = -100;
 	}
@@ -54,35 +56,37 @@ public class MenuView extends SurfaceView implements Callback, Runnable{
 	}
 
 	public void draw() {
-		try{
-			canvas = surfaceHolder.lockCanvas();//得到一个canvas实例
-			//canvas.drawColor(Color.WHITE);
+		try {
+			canvas = surfaceHolder.lockCanvas();// 得到一个canvas实例
+			// canvas.drawColor(Color.WHITE);
 			menuBit.prepareToDraw();
-			canvas.drawBitmap(menuBit, (ScreenW-bitX)/2,bitY, paint);
-			canvas.drawText("1P     Game start",ScreenW/3,ScreenH/2,paint);
-			canvas.drawText("2P     Game start",ScreenW/3,ScreenH/2+40,paint);
-		}catch(Exception e){
-			
-		}finally{
+			canvas.drawBitmap(menuBit, (ScreenW - bitX) / 2, bitY, paint);
+			canvas.drawText("1P     Game start", ScreenW / 3, ScreenH / 2,
+					paint);
+			canvas.drawText("2P     Game start", ScreenW / 3, ScreenH / 2 + 40,
+					paint);
+		} catch (Exception e) {
+
+		} finally {
 			if (canvas != null)
-				surfaceHolder.unlockCanvasAndPost(canvas);//将画好的画布提交
+				surfaceHolder.unlockCanvasAndPost(canvas);// 将画好的画布提交
 		}
 	}
 
 	@Override
 	public void run() {
-		while(true){
+		while (true) {
 			draw();
-			if(bitY<(ScreenW-bitX)/2)
-				bitY+=1;
-			try{
-				//System.out.println("Menu View running");
+			if (bitY < (ScreenW - bitX) / 2)
+				bitY += 1;
+			try {
+				// System.out.println("Menu View running");
 				Thread.sleep(10);
-			}catch (Exception e){
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		
+
 	}
 
 	@Override
@@ -94,7 +98,7 @@ public class MenuView extends SurfaceView implements Callback, Runnable{
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -102,14 +106,15 @@ public class MenuView extends SurfaceView implements Callback, Runnable{
 		System.out.println("Menu View created!");
 		ScreenW = this.getWidth();
 		ScreenH = this.getHeight();
+		System.out.println("Width:" + ScreenW + " Height:" + ScreenH);
 		thread.start();
-		
+
 	}
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
