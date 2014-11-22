@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 
 public class MainActivity extends Activity {
+	MenuView menuView ;
 	GameView gameView ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {

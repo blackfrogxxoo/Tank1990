@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.view.KeyEvent;
 import android.view.SurfaceHolder;
@@ -23,6 +24,7 @@ public class MenuView extends SurfaceView implements Callback, Runnable {
 	int bitX, bitY;
 	SurfaceHolder surfaceHolder;
 	private Bitmap menuBit;
+	private Matrix matrix;
 
 	public MenuView(Context context) {
 		super(context);
@@ -60,6 +62,9 @@ public class MenuView extends SurfaceView implements Callback, Runnable {
 			canvas = surfaceHolder.lockCanvas();// 得到一个canvas实例
 			// canvas.drawColor(Color.WHITE);
 			menuBit.prepareToDraw();
+			matrix = new Matrix();
+			//this.matrix.preTranslate(0, 10);
+			//canvas.drawBitmap(menuBit,this.matrix,null);
 			canvas.drawBitmap(menuBit, (ScreenW - bitX) / 2, bitY, paint);
 			canvas.drawText("1P     Game start", ScreenW / 3, ScreenH / 2,
 					paint);
